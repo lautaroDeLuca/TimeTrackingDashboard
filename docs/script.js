@@ -5,7 +5,8 @@ class TrackerComponent extends HTMLElement {
 
         const component = document.createElement('DIV');
 
-        component.innerHTML = `    <div class="image-container">
+        component.innerHTML = `    <link rel="stylesheet" href="styles.css">
+        <div class="image-container">
         <slot name="category-image"></slot>
         <div class="tracker-container">
             <slot name='category'></slot>
@@ -113,24 +114,38 @@ class TrackerComponent extends HTMLElement {
 
 }
 
-window.customElements.define("tracker-component", TrackerComponent);
-
-class TrackerBuilder extends HTMLElement{
+class TrackerBuilderDaily extends HTMLElement{
     constructor(){
         super();
         const shadow = this.attachShadow({mode: 'open'});
         const data = this.parserMethod();
+        const categoryNames = data[0];
+        const categoryTimestamps = data[1];
+        const categoryImagesURL = data[2];
 
-        const wrapper = document.createElement('tracker-component');
+        const documentFragment = document.createDocumentFragment();
 
-        wrapper.innerHTML = `                    <link rel="stylesheet" href="styles.css">
-        <div slot="image-container" class="image-container" style="background-color: var(--light-red);"></div>
-        <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/1f1a8eeda993265a4e1e84254116b9b4458d1e37/images/icon-work.svg" alt="">
-        <h2 slot="category" class="category">${data[0][0]}</h2>
-        <p slot="hour-log" class="hour-log">${data[1][0].current}hs</p>
-        <p slot="last-log" class="last-log">Last week - ${data[1][0].previous}hs</p>`
+        let trackerProfile = document.createElement('tracker-profile');
+        trackerProfile.setAttribute('class', 'first-card')
 
-        shadow.appendChild(wrapper);
+        trackerProfile.innerHTML = `<h2 slot="name" class="name-text">Jeremy Robson</h2>`
+
+        documentFragment.appendChild(trackerProfile);
+
+        for(let i=0; i<categoryNames.length; i++){
+          let trackerComponent = document.createElement('tracker-component');
+
+          trackerComponent.innerHTML = `                    <link rel="stylesheet" href="styles.css">
+          <div slot="image-container" class="image-container" style="background-color: var(--light-red);"></div>
+          <img slot="category-image" class="category-image" src=${categoryImagesURL[i]} alt="">
+          <h2 slot="category" class="category">${categoryNames[i]}</h2>
+          <p slot="hour-log" class="hour-log">${categoryTimestamps[i].daily.current}hs</p>
+          <p slot="last-log" class="last-log">Yesterday - ${categoryTimestamps[i].daily.previous}hs</p>`
+
+          documentFragment.appendChild(trackerComponent);
+        }
+
+        shadow.appendChild(documentFragment);
 
     }
 
@@ -242,18 +257,372 @@ class TrackerBuilder extends HTMLElement{
               }
             }
           ]`
+
+          const imageArray = ["https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-work.svg",
+                              "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-play.svg",
+                              "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-study.svg",
+                              "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-exercise.svg",
+                              "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-social.svg",
+                              "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-self-care.svg"
+        ];
         
         const data = JSON.parse(trackerData);
         let titlesArray = [];
         let dataArray = [];
         for(let i=0;i<data.length;i++){
             titlesArray.push(data[i].title);
-            dataArray.push(data[i].timeframes.daily);
+            dataArray.push(data[i].timeframes);
         }
-        let returnObject = [titlesArray, dataArray];
+        let returnObject = [titlesArray, dataArray, imageArray];
         return returnObject;
     }
 }
 
-window.customElements.define("tracker-builder", TrackerBuilder);
+class TrackerBuilderWeekly extends HTMLElement{
+  constructor(){
+      super();
+      const shadow = this.attachShadow({mode: 'open'});
+      const data = this.parserMethod();
+      const categoryNames = data[0];
+      const categoryTimestamps = data[1];
+      const categoryImagesURL = data[2];
 
+      const documentFragment = document.createDocumentFragment();
+
+      for(let i=0; i<categoryNames.length; i++){
+        let trackerComponent = document.createElement('tracker-component');
+
+        trackerComponent.innerHTML = `                    <link rel="stylesheet" href="styles.css">
+        <div slot="image-container" class="image-container" style="background-color: var(--light-red);"></div>
+        <img slot="category-image" class="category-image" src=${categoryImagesURL[i]} alt="">
+        <h2 slot="category" class="category">${categoryNames[i]}</h2>
+        <p slot="hour-log" class="hour-log">${categoryTimestamps[i].weekly.current}hs</p>
+        <p slot="last-log" class="last-log">Last Week - ${categoryTimestamps[i].weekly.previous}hs</p>`
+
+        documentFragment.appendChild(trackerComponent);
+      }
+
+      shadow.appendChild(documentFragment);
+
+  }
+
+  connectedCallback(){
+  }
+
+  parserMethod = () => {
+      const trackerData = `[
+          {
+            "title": "Work",
+            "timeframes": {
+              "daily": {
+                "current": 5,
+                "previous": 7
+              },
+              "weekly": {
+                "current": 32,
+                "previous": 36
+              },
+              "monthly": {
+                "current": 103,
+                "previous": 128
+              }
+            }
+          },
+          {
+            "title": "Play",
+            "timeframes": {
+              "daily": {
+                "current": 1,
+                "previous": 2
+              },
+              "weekly": {
+                "current": 10,
+                "previous": 8
+              },
+              "monthly": {
+                "current": 23,
+                "previous": 29
+              }
+            }
+          },
+          {
+            "title": "Study",
+            "timeframes": {
+              "daily": {
+                "current": 0,
+                "previous": 1
+              },
+              "weekly": {
+                "current": 4,
+                "previous": 7
+              },
+              "monthly": {
+                "current": 13,
+                "previous": 19
+              }
+            }
+          },
+          {
+            "title": "Exercise",
+            "timeframes": {
+              "daily": {
+                "current": 1,
+                "previous": 1
+              },
+              "weekly": {
+                "current": 4,
+                "previous": 5
+              },
+              "monthly": {
+                "current": 11,
+                "previous": 18
+              }
+            }
+          },
+          {
+            "title": "Social",
+            "timeframes": {
+              "daily": {
+                "current": 1,
+                "previous": 3
+              },
+              "weekly": {
+                "current": 5,
+                "previous": 10
+              },
+              "monthly": {
+                "current": 21,
+                "previous": 23
+              }
+            }
+          },
+          {
+            "title": "Self Care",
+            "timeframes": {
+              "daily": {
+                "current": 0,
+                "previous": 1
+              },
+              "weekly": {
+                "current": 2,
+                "previous": 2
+              },
+              "monthly": {
+                "current": 7,
+                "previous": 11
+              }
+            }
+          }
+        ]`
+
+        const imageArray = ["https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-work.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-play.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-study.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-exercise.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-social.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-self-care.svg"
+      ];
+      
+      const data = JSON.parse(trackerData);
+      let titlesArray = [];
+      let dataArray = [];
+      for(let i=0;i<data.length;i++){
+          titlesArray.push(data[i].title);
+          dataArray.push(data[i].timeframes);
+      }
+      let returnObject = [titlesArray, dataArray, imageArray];
+      return returnObject;
+  }
+}
+
+class TrackerBuilderMonthly extends HTMLElement{
+  constructor(){
+      super();
+      const shadow = this.attachShadow({mode: 'open'});
+      const data = this.parserMethod();
+      const categoryNames = data[0];
+      const categoryTimestamps = data[1];
+      const categoryImagesURL = data[2];
+
+      const documentFragment = document.createDocumentFragment();
+
+      for(let i=0; i<categoryNames.length; i++){
+        let trackerComponent = document.createElement('tracker-component');
+
+        trackerComponent.innerHTML = `                    <link rel="stylesheet" href="styles.css">
+        <div slot="image-container" class="image-container" style="background-color: var(--light-red);"></div>
+        <img slot="category-image" class="category-image" src=${categoryImagesURL[i]} alt="">
+        <h2 slot="category" class="category">${categoryNames[i]}</h2>
+        <p slot="hour-log" class="hour-log">${categoryTimestamps[i].monthly.current}hs</p>
+        <p slot="last-log" class="last-log">Last Month - ${categoryTimestamps[i].monthly.previous}hs</p>`
+
+        documentFragment.appendChild(trackerComponent);
+      }
+
+      shadow.appendChild(documentFragment);
+
+  }
+
+  connectedCallback(){
+  }
+
+  parserMethod = () => {
+      const trackerData = `[
+          {
+            "title": "Work",
+            "timeframes": {
+              "daily": {
+                "current": 5,
+                "previous": 7
+              },
+              "weekly": {
+                "current": 32,
+                "previous": 36
+              },
+              "monthly": {
+                "current": 103,
+                "previous": 128
+              }
+            }
+          },
+          {
+            "title": "Play",
+            "timeframes": {
+              "daily": {
+                "current": 1,
+                "previous": 2
+              },
+              "weekly": {
+                "current": 10,
+                "previous": 8
+              },
+              "monthly": {
+                "current": 23,
+                "previous": 29
+              }
+            }
+          },
+          {
+            "title": "Study",
+            "timeframes": {
+              "daily": {
+                "current": 0,
+                "previous": 1
+              },
+              "weekly": {
+                "current": 4,
+                "previous": 7
+              },
+              "monthly": {
+                "current": 13,
+                "previous": 19
+              }
+            }
+          },
+          {
+            "title": "Exercise",
+            "timeframes": {
+              "daily": {
+                "current": 1,
+                "previous": 1
+              },
+              "weekly": {
+                "current": 4,
+                "previous": 5
+              },
+              "monthly": {
+                "current": 11,
+                "previous": 18
+              }
+            }
+          },
+          {
+            "title": "Social",
+            "timeframes": {
+              "daily": {
+                "current": 1,
+                "previous": 3
+              },
+              "weekly": {
+                "current": 5,
+                "previous": 10
+              },
+              "monthly": {
+                "current": 21,
+                "previous": 23
+              }
+            }
+          },
+          {
+            "title": "Self Care",
+            "timeframes": {
+              "daily": {
+                "current": 0,
+                "previous": 1
+              },
+              "weekly": {
+                "current": 2,
+                "previous": 2
+              },
+              "monthly": {
+                "current": 7,
+                "previous": 11
+              }
+            }
+          }
+        ]`
+
+        const imageArray = ["https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-work.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-play.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-study.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-exercise.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-social.svg",
+                            "https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/f4df73b2ae4f5e9bf760590e1ad252b8d5cf9723/images/icon-self-care.svg"
+      ];
+      
+      const data = JSON.parse(trackerData);
+      let titlesArray = [];
+      let dataArray = [];
+      for(let i=0;i<data.length;i++){
+          titlesArray.push(data[i].title);
+          dataArray.push(data[i].timeframes);
+      }
+      let returnObject = [titlesArray, dataArray, imageArray];
+      return returnObject;
+  }
+}
+
+class TrackerProfile extends HTMLElement{
+  constructor(){
+      super();
+      const shadow = this.attachShadow({mode: 'open'});
+
+      const wrapper = document.createElement('DIV');
+      wrapper.setAttribute('class', 'card-wrapper');
+
+      wrapper.innerHTML = `                <link rel="stylesheet" href="styles.css">
+      <div class="profile">
+      <img class="guy-pic" src="https://github.com/lautaroDeLuca/TimeTrackingDashboard/blob/master/images/image-jeremy.png?raw=true" alt="">
+      <p class="report-text">Report for</p>
+      <slot name="name"></slot>                    
+  </div>
+  <div class="selector">
+      <ul class="period-list">
+          <li class="time-period">Daily</li>
+          <li class="time-period">Weekly</li>
+          <li class="time-period">Monthly</li>
+      </ul>
+  </div>`
+
+  shadow.appendChild(wrapper);
+      
+  }
+
+}
+
+
+window.customElements.define("tracker-builder-daily", TrackerBuilderDaily);
+window.customElements.define("tracker-builder-monthly", TrackerBuilderMonthly);
+window.customElements.define("tracker-builder-weekly", TrackerBuilderWeekly);
+window.customElements.define("tracker-component", TrackerComponent);
+window.customElements.define("tracker-profile", TrackerProfile);
