@@ -114,3 +114,146 @@ class TrackerComponent extends HTMLElement {
 }
 
 window.customElements.define("tracker-component", TrackerComponent);
+
+class TrackerBuilder extends HTMLElement{
+    constructor(){
+        super();
+        const shadow = this.attachShadow({mode: 'open'});
+        const data = this.parserMethod();
+
+        const wrapper = document.createElement('tracker-component');
+
+        wrapper.innerHTML = `                    <link rel="stylesheet" href="styles.css">
+        <div slot="image-container" class="image-container" style="background-color: var(--light-red);"></div>
+        <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/1f1a8eeda993265a4e1e84254116b9b4458d1e37/images/icon-work.svg" alt="">
+        <h2 slot="category" class="category">${data[0][0]}</h2>
+        <p slot="hour-log" class="hour-log">${data[1][0].current}hs</p>
+        <p slot="last-log" class="last-log">Last week - ${data[1][0].previous}hs</p>`
+
+        shadow.appendChild(wrapper);
+
+    }
+
+    connectedCallback(){
+    }
+
+    parserMethod = () => {
+        const trackerData = `[
+            {
+              "title": "Work",
+              "timeframes": {
+                "daily": {
+                  "current": 5,
+                  "previous": 7
+                },
+                "weekly": {
+                  "current": 32,
+                  "previous": 36
+                },
+                "monthly": {
+                  "current": 103,
+                  "previous": 128
+                }
+              }
+            },
+            {
+              "title": "Play",
+              "timeframes": {
+                "daily": {
+                  "current": 1,
+                  "previous": 2
+                },
+                "weekly": {
+                  "current": 10,
+                  "previous": 8
+                },
+                "monthly": {
+                  "current": 23,
+                  "previous": 29
+                }
+              }
+            },
+            {
+              "title": "Study",
+              "timeframes": {
+                "daily": {
+                  "current": 0,
+                  "previous": 1
+                },
+                "weekly": {
+                  "current": 4,
+                  "previous": 7
+                },
+                "monthly": {
+                  "current": 13,
+                  "previous": 19
+                }
+              }
+            },
+            {
+              "title": "Exercise",
+              "timeframes": {
+                "daily": {
+                  "current": 1,
+                  "previous": 1
+                },
+                "weekly": {
+                  "current": 4,
+                  "previous": 5
+                },
+                "monthly": {
+                  "current": 11,
+                  "previous": 18
+                }
+              }
+            },
+            {
+              "title": "Social",
+              "timeframes": {
+                "daily": {
+                  "current": 1,
+                  "previous": 3
+                },
+                "weekly": {
+                  "current": 5,
+                  "previous": 10
+                },
+                "monthly": {
+                  "current": 21,
+                  "previous": 23
+                }
+              }
+            },
+            {
+              "title": "Self Care",
+              "timeframes": {
+                "daily": {
+                  "current": 0,
+                  "previous": 1
+                },
+                "weekly": {
+                  "current": 2,
+                  "previous": 2
+                },
+                "monthly": {
+                  "current": 7,
+                  "previous": 11
+                }
+              }
+            }
+          ]`
+        
+        const data = JSON.parse(trackerData);
+        let titlesArray = [];
+        let dataArray = [];
+        for(let i=0;i<data.length;i++){
+            titlesArray.push(data[i].title);
+            dataArray.push(data[i].timeframes.daily);
+        }
+        let returnObject = [titlesArray, dataArray];
+        return returnObject;
+    }
+}
+
+window.customElements.define("tracker-builder", TrackerBuilder);
+
