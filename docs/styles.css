@@ -38,7 +38,7 @@ body{
     bottom: 0;
     height: 75%;
     width: 100%;
-    padding: .75em;
+    padding: 1em;
     position: absolute;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -53,6 +53,7 @@ body{
 
 .three-dots{
     justify-self: right;
+    top: 0;
 }
 
 .hour-log{
@@ -67,7 +68,6 @@ body{
 }
 
 .image-container{
-    background-color: var(--light-red);
     border-radius: 20px;
     width:100%; 
     min-height: 200px;
@@ -76,10 +76,26 @@ body{
     overflow: hidden;
 }
 
-.image{
+.image-container-work{
+    background-color: var(--light-red);
+}
+
+.category-image{
     top: -5px;
     right:20px;
     width: 60px;
     bottom: 0;
-    position:absolute;
+    position: absolute;
+}
+
+.content-wrapper{
+    display: flex;
+}
+
+
+.grid-wrapper{
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
 }

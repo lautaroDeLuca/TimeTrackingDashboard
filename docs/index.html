@@ -9,16 +9,51 @@
     <title>Tracker - Frontend Mentor - Vanilla Js</title>
 </head>
 <body>
-    <div class="component-wrapper">
-        <div class="image-container">
-            <img class="image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/1f1a8eeda993265a4e1e84254116b9b4458d1e37/images/icon-work.svg" alt="">
-            <div class="tracker-container">
-                <h2 class="category">Work</h2>
-                <div class="three-dots"><img src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/1f1a8eeda993265a4e1e84254116b9b4458d1e37/images/icon-ellipsis.svg" alt=""></div>
-                <p class="hour-log">32hrs</p>
-                <p class="last-log">Last Week - log</p>
-            </div>
+        <div class="grid-wrapper">
+            <tracker-component>
+                <link rel="stylesheet" href="styles.css">
+                <div slot="image-container" class="image-container" style="background-color: var(--light-red);"></div>
+                <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/1f1a8eeda993265a4e1e84254116b9b4458d1e37/images/icon-work.svg" alt="">
+                <h2 slot="category" class="category">Work</h2>
+                <p slot="hour-log" class="hour-log">32hs</p>
+                <p slot="last-log" class="last-log">Last week</p>
+            </tracker-component>
+            <tracker-component>
+                <link rel="stylesheet" href="styles.css">
+                <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/3723d6b629bdf201518dda2190acc49541f1c941/images/icon-play.svg" alt="">
+                <h2 slot="category" class="category">Play</h2>
+                <p slot="hour-log" class="hour-log">32hs</p>
+                <p slot="last-log" class="last-log">Last week</p>
+            </tracker-component>
+            <tracker-component>
+                <link rel="stylesheet" href="styles.css">
+                <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/3723d6b629bdf201518dda2190acc49541f1c941/images/icon-study.svg" alt="">
+                <h2 slot="category" class="category">Study</h2>
+                <p slot="hour-log" class="hour-log">32hs</p>
+                <p slot="last-log" class="last-log">Last week</p>
+            </tracker-component>
+            <tracker-component>
+                <link rel="stylesheet" href="styles.css">
+                <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/3723d6b629bdf201518dda2190acc49541f1c941/images/icon-exercise.svg" alt="">
+                <h2 slot="category" class="category">Exercise</h2>
+                <p slot="hour-log" class="hour-log">32hs</p>
+                <p slot="last-log" class="last-log">Last week</p>
+            </tracker-component>
+            <tracker-component>
+                <link rel="stylesheet" href="styles.css">
+                <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/3723d6b629bdf201518dda2190acc49541f1c941/images/icon-social.svg" alt="">
+                <h2 slot="category" class="category">Social</h2>
+                <p slot="hour-log" class="hour-log">32hs</p>
+                <p slot="last-log" class="last-log">Last week</p>
+            </tracker-component>
+            <tracker-component>
+                <link rel="stylesheet" href="styles.css">
+                <img slot="category-image" class="category-image" src="https://raw.githubusercontent.com/lautaroDeLuca/TimeTrackingDashboard/3723d6b629bdf201518dda2190acc49541f1c941/images/icon-self-care.svg" alt="">
+                <h2 slot="category" class="category">Self Care</h2>
+                <p slot="hour-log" class="hour-log">32hs</p>
+                <p slot="last-log" class="last-log">Last week</p>
+            </tracker-component>
         </div>
-    </div>
+    <script src='script.js'></script>
 </body>
 </html>
