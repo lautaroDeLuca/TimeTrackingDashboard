@@ -271,8 +271,6 @@ class TrackerBuilderDaily extends HTMLElement{
 
         shadow.appendChild(documentFragment);
 
-      
-
     }
 
     connectedCallback(){
@@ -623,7 +621,7 @@ class TrackerBuilderMonthly extends HTMLElement{
         <img slot="category-image" class="category-image" src=${categoryImagesURL[i]} alt="">
         <h2 slot="category" class="category">${categoryNames[i]}</h2>
         <p slot="hour-log" class="hour-log">${categoryTimestamps[i].monthly.current}hs</p>
-        <p slot="last-log" class="last-log">Last Week - ${categoryTimestamps[i].monthly.previous}hs</p>`
+        <p slot="last-log" class="last-log">Last Month - ${categoryTimestamps[i].monthly.previous}hs</p>`
 
         documentFragment.appendChild(trackerComponent);
       }
