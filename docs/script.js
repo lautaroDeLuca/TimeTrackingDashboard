@@ -259,13 +259,27 @@ class TrackerBuilderDaily extends HTMLElement{
 
         for(let i=0; i<categoryNames.length; i++){
           let trackerComponent = document.createElement('tracker-component');
-
+          
+          const target = trackerComponent.shadowRoot.querySelector(".image-container-blue");
+          if(i===0){
+            target.setAttribute('class', 'image-container-red');}
+          if(i===1){
+            target.setAttribute('class', 'image-container-blue');}
+          if(i===2){
+            target.setAttribute('class', 'image-container-pink');}
+          if(i===3){
+            target.setAttribute('class', 'image-container-green');}
+          if(i===4){
+            target.setAttribute('class', 'image-container-purple');}
+          if(i===5){
+            target.setAttribute('class', 'image-container-yellow');}
+  
           trackerComponent.innerHTML = `                    <link rel="stylesheet" href="styles.css">
           <img slot="category-image" class="category-image" src=${categoryImagesURL[i]} alt="">
           <h2 slot="category" class="category">${categoryNames[i]}</h2>
           <p slot="hour-log" class="hour-log">${categoryTimestamps[i].daily.current}hs</p>
-          <p slot="last-log" class="last-log">Yesterday - ${categoryTimestamps[i].daily.previous}hs</p>`
-
+          <p slot="last-log" class="last-log">Last Week - ${categoryTimestamps[i].daily.previous}hs</p>`
+  
           documentFragment.appendChild(trackerComponent);
         }
 
