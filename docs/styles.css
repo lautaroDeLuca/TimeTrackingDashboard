@@ -58,6 +58,11 @@ body{
 .three-dots{
     justify-self: right;
     top: 0;
+    opacity: .8;
+}
+
+.three-dots:hover{
+    opacity: 1;
 }
 
 .hour-log{
@@ -186,7 +191,7 @@ body{
 }
 
 .time-period{
-    color: white;
+    color: var(--desaturated-blue);
     list-style-type: none;
     padding: .5em;
     padding-left: 1.5em;
@@ -194,7 +199,7 @@ body{
 }
 
 .time-period:hover{
-    color: var(--pale-blue);
+    color: white;
 }
 
 #periodlist{

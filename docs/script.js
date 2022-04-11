@@ -241,6 +241,65 @@ class TrackerComponent extends HTMLElement {
 
 window.customElements.define("tracker-component", TrackerComponent);
 
+class TrackerProfile extends HTMLElement{
+  constructor(){
+      super();
+      const shadow = this.attachShadow({mode: 'open'});
+
+      const wrapper = document.createElement('DIV');
+      wrapper.setAttribute('class', 'card-wrapper');
+
+      wrapper.innerHTML = `                <link rel="stylesheet" href="styles.css">
+      <div class="profile">
+      <img class="guy-pic" src="https://github.com/lautaroDeLuca/TimeTrackingDashboard/blob/master/images/image-jeremy.png?raw=true" alt="">
+      <p class="report-text">Report for</p>
+      <slot name="name"></slot>                    
+  </div>
+  <div class="selector">
+      <ul id="periodlist">
+          <li class="time-period">Daily</li>
+          <li class="time-period">Weekly</li>
+          <li class="time-period">Monthly</li>
+      </ul>
+  </div>`
+
+  shadow.appendChild(wrapper);
+      
+  }
+
+  connectedCallback(){
+    this.buttonActions();
+  }
+
+  buttonActions = () => {
+    const target = this.shadowRoot.querySelectorAll('.time-period');
+    let replacement = 0;
+    for(let i=0; i<target.length; i++){
+      target[i].addEventListener("click", () => {
+        if(i===0){
+          replacement = document.createElement("tracker-builder-daily");
+        }
+        if(i===1){
+          replacement = document.createElement("tracker-builder-weekly");
+        }
+        if(i===2){
+          replacement = document.createElement("tracker-builder-monthly");
+        }        
+        const removeTarget = document.querySelector('.grid-wrapper')
+        replacement.setAttribute('class', 'grid-wrapper');
+        const subtarget = document.querySelector(".page-wrapper");
+        subtarget.removeChild(removeTarget);
+        subtarget.appendChild(replacement);
+      });
+
+    }
+
+  }
+
+}
+
+window.customElements.define("tracker-profile", TrackerProfile);
+
 class TrackerBuilderDaily extends HTMLElement{
     constructor(){
         super();
@@ -253,9 +312,13 @@ class TrackerBuilderDaily extends HTMLElement{
         const documentFragment = document.createDocumentFragment();
 
         let trackerProfile = document.createElement('tracker-profile');
-        trackerProfile.setAttribute('class', 'first-card')
+        trackerProfile.setAttribute('class', 'first-card');
 
         trackerProfile.innerHTML = `<h2 slot="name" class="name-text">Jeremy Robson</h2>`
+
+        const targetDate = trackerProfile.shadowRoot.querySelectorAll(".time-period");
+
+        targetDate[0].style.color = "white";
 
         documentFragment.appendChild(trackerProfile);
 
@@ -434,6 +497,10 @@ class TrackerBuilderWeekly extends HTMLElement{
 
       trackerProfile.innerHTML = `<h2 slot="name" class="name-text">Jeremy Robson</h2>`;
 
+      const targetDate = trackerProfile.shadowRoot.querySelectorAll(".time-period");
+
+      targetDate[1].style.color = "white";
+      
       documentFragment.appendChild(trackerProfile);
 
       for(let i=0; i<categoryNames.length; i++){
@@ -613,6 +680,10 @@ class TrackerBuilderMonthly extends HTMLElement{
       trackerProfile.setAttribute('class', 'first-card');
 
       trackerProfile.innerHTML = `<h2 slot="name" class="name-text">Jeremy Robson</h2>`;
+     
+      const targetDate = trackerProfile.shadowRoot.querySelectorAll(".time-period");
+
+      targetDate[2].style.color = "white";
 
       documentFragment.appendChild(trackerProfile);
 
@@ -775,65 +846,10 @@ class TrackerBuilderMonthly extends HTMLElement{
   }
 }
 
-class TrackerProfile extends HTMLElement{
-  constructor(){
-      super();
-      const shadow = this.attachShadow({mode: 'open'});
 
-      const wrapper = document.createElement('DIV');
-      wrapper.setAttribute('class', 'card-wrapper');
-
-      wrapper.innerHTML = `                <link rel="stylesheet" href="styles.css">
-      <div class="profile">
-      <img class="guy-pic" src="https://github.com/lautaroDeLuca/TimeTrackingDashboard/blob/master/images/image-jeremy.png?raw=true" alt="">
-      <p class="report-text">Report for</p>
-      <slot name="name"></slot>                    
-  </div>
-  <div class="selector">
-      <ul id="periodlist">
-          <li class="time-period">Daily</li>
-          <li class="time-period">Weekly</li>
-          <li class="time-period">Monthly</li>
-      </ul>
-  </div>`
-
-  shadow.appendChild(wrapper);
-      
-  }
-
-  connectedCallback(){
-    this.buttonActions();
-  }
-
-  buttonActions = () => {
-    const target = this.shadowRoot.querySelectorAll('.time-period');
-    let replacement = 0;
-    for(let i=0; i<target.length; i++){
-      target[i].addEventListener("click", () => {
-        if(i===0){
-          replacement = document.createElement("tracker-builder-daily");
-        }
-        if(i===1){
-          replacement = document.createElement("tracker-builder-weekly");
-        }
-        if(i===2){
-          replacement = document.createElement("tracker-builder-monthly");
-        }        
-        const removeTarget = document.querySelector('.grid-wrapper')
-        replacement.setAttribute('class', 'grid-wrapper');
-        const subtarget = document.querySelector(".page-wrapper");
-        subtarget.removeChild(removeTarget);
-        subtarget.appendChild(replacement);
-      });
-
-    }
-
-  }
-
-}
 
 
 window.customElements.define("tracker-builder-daily", TrackerBuilderDaily);
 window.customElements.define("tracker-builder-monthly", TrackerBuilderMonthly);
 window.customElements.define("tracker-builder-weekly", TrackerBuilderWeekly);
-window.customElements.define("tracker-profile", TrackerProfile);
+
